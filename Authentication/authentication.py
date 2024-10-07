@@ -1,25 +1,26 @@
+import os
+from dotenv import load_dotenv
 from flask import Flask, request, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 import jwt
 import datetime
-import os
-from dotenv import load_dotenv
 
-# Carregar as variáveis do arquivo .env
+# Carregar variáveis do arquivo .env
 load_dotenv()
 
 app = Flask(__name__)
 
 # Configuração do Flask utilizando variáveis de ambiente
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI').replace('mysql://', 'mysql+pymysql://')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
 db = SQLAlchemy(app)
 CORS(app)
 
-# Resto do código permanece igual
+# Classe de usuários
 class Users(db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
